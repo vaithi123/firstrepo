@@ -1,0 +1,129 @@
+<!DOCTYPE html >
+
+
+  <head>
+      <style type="text/css">
+
+#map {
+        width:1000px;
+        height:600px;
+		float:right;
+    }
+
+</style>
+
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <title>Dealers Search</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHUtybGmp0-zD_RFSsSgmta1zQJ2hsWvE"
+            type="text/javascript"></script>
+    <script type="text/javascript">
+    //<![CDATA[
+
+    var startLatit = 0;
+    var strtLong = 0;
+        
+    var customIcons = {
+      restaurant: {
+        icon: 'http://labs.google.com/ridefinder/images/mm_20_blue.png'
+      },
+      bar: {
+        icon: 'http://labs.google.com/ridefinder/images/mm_20_red.png'
+      }
+    };
+	
+	if (navigator.geolocation) {
+		console.log('Geolocation is supported!');
+	}
+	else {
+		console.log('Geolocation is not supported for this Browser/OS version yet.');
+	}
+	
+window.onload = function() {
+    var startPos;
+
+    var geoSuccess = function(position) {
+
+        var infoWindow = new google.maps.InfoWindow;
+        var markersVal = '';
+        var name = "Vaithi";
+        var address = "Raja Annamalai Puram";
+        var type = "Restaurant";
+
+        startPos = position;
+        startLatit = startPos.coords.latitude;
+        strtLong = startPos.coords.longitude;
+        
+        var map = new google.maps.Map(document.getElementById("map"), {
+            center: new google.maps.LatLng(startLatit,strtLong),
+            zoom: 13,
+            mapTypeId: 'roadmap'
+        });
+    
+    var point = new google.maps.LatLng(
+    parseFloat(startLatit),
+    parseFloat(strtLong));
+    var html = "<b>" + name + "</b> <br/>" + address;
+    markersVal = "<b> Name: " + name + "</b> <br/> Address: " + address + "<br/><br/>";		  
+    var icon = customIcons[type] || {};
+    var marker = new google.maps.Marker({
+    map: map,
+    position: point,
+    icon: icon.icon
+    });
+    bindInfoWindow(marker, map, infoWindow, html);
+    };
+    var geoError = function(error) {
+    console.log('Error occurred. Error code: ' + error.code);
+    // error.code can be:
+    //   0: unknown error
+    //   1: permission denied
+    //   2: position unavailable (error response from location provider)
+    //   3: timed out
+    };
+    navigator.geolocation.getCurrentPosition(geoSuccess, geoError);
+
+      
+    }
+	
+	
+    function bindInfoWindow(marker, map, infoWindow, html) {
+      google.maps.event.addListener(marker, 'click', function() {
+        infoWindow.setContent(html);
+        infoWindow.open(map, marker);
+      });
+    }
+
+    function downloadUrl(url, callback) {
+      var request = window.ActiveXObject ?
+          new ActiveXObject('Microsoft.XMLHTTP') :
+          new XMLHttpRequest;
+
+      request.onreadystatechange = function() {
+        if (request.readyState == 4) {
+          request.onreadystatechange = doNothing;
+          callback(request, request.status);
+        }
+      };
+
+      request.open('GET', url, true);
+      request.send(null);
+    }
+
+    function doNothing() {}
+
+    //]]>
+
+  </script>
+
+  </head>
+
+  <body onload="load()">
+    <div id="map"></div>
+	<div id="val" style="width: 300px; height: 780px;float:left; border:2px solid green;">
+	</div>
+	<div id="startLat"></div>
+	<div id="startLon"></div>
+  </body>
+
+</html>
